@@ -1,0 +1,43 @@
+{
+  "$schema": "./node_modules/rascal/lib/config/schema.json",
+  
+  "vhosts": {
+    "/": {
+      "publicationChannelPools": {
+        "confirmPool": {
+          "max": 10,
+          "min": 5,
+          "evictionRunIntervalMillis": 10000,
+          "idleTimeoutMillis": 60000,
+          "autostart": true
+        }
+    },
+      "connection": {
+        "url": "amqp://guest:guest@rabbitmq:5672",
+        "options":{
+          "heartbeat": 10
+        },
+        "socketOptions":{
+          "timeout": 1000
+        }
+      },
+      "exchanges": ["notification"],
+      "queues": ["notification_q"],
+      "bindings": ["notification[p] -> notification_q"],
+      "publications": {
+        "notification_pub": {
+          "exchange": "notification",
+          "routingKey": "p",
+          "options":{
+              "persistent": false
+          }
+        }
+      },
+      "subscriptions": {
+        "notification_sub": {
+          "queue": "notification_q"
+        }
+      }
+    }
+  }
+}
